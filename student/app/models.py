@@ -16,3 +16,7 @@ class Student(BaseModel):
 
 class Teacher(BaseModel):
     pass
+
+
+class NonTeachingStaff(BaseModel):
+    pass
