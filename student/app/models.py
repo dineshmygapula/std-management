@@ -1,22 +1,27 @@
 from django.db import models
+from django.core.validators import MinLengthValidator
 
 
-# Create your models here.
-class BaseModel(models.Model):
+class Student(models.Model):
     name = models.CharField(max_length=100)
-    age = models.IntegerField(default=18)
-    Email = models.EmailField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
-class Student(BaseModel):
-    pass
+class Marks(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
 
-class Teacher(BaseModel):
-    pass
+class Company(models.Model):
+    name = models.CharField(max_length=100, validators=[MinLengthValidator(5)])
+    location = models.CharField(max_length=100)
+    description = models.TextField()
+    logo = models.ImageField(upload_to="company_logos/", null=True)
+    approved = models.BooleanField(default=False)
 
+    class Meta:
+        permissions = [
+            ("can_approve_company", "can approve company"),
+            ("can_delete_company", "can delete company"),
+        ]
 
-class NonTeachingStaff(BaseModel):
-    pass
+    def __str__(self):
+        return self.name

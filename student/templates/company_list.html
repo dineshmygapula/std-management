@@ -1,0 +1,43 @@
+{% if user.is_authenticated %}
+
+    <h2>Welcome, {{ user.username }}</h2>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+{% endif %}
+{% if perms.app.can_approve_company %}
+    <a href="{% url 'approve_company' company.id %}">
+        Approve
+    </a>
+{% endif %}
+{% for company in companies %}
+
+    <h2>{{ company.name }}</h2>
+    <h2>{{ company.location }}</h2>
+    <h2>{{ company.description }}</h2>
+
+    {% if company.logo %}
+        <img src="{{ company.logo.url }}"
+             alt="{{ company.name }}"
+             width="150">
+    {% else %}
+        <p>No logo uploaded.</p>
+    {% endif %}
+    
+    <a href="{% url 'update_company' company.id %}">
+    <button type="button">Update</button>
+     </a>
+    <a href="{% url 'delete_company' company.id %}">
+    <button type="button">delete</button>
+     </a>
+
+    <hr>
+
+{% empty %}
+
+    <p>No companies found.</p>
+
+{% endfor %}
